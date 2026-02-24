@@ -1,0 +1,35 @@
+name: StockSense ML Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ml_pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+      - uses: actions/checkout@v3
+
+      - name: Set Up Python
+      - uses: actions/setup-python@v4
+        with:
+          python-version: " 3.11"
+      
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run model evaluation
+        run: python app/evaluate.py
+
+      - name: Deploy to render 
+        if: success()
+
+        run: echo "All checks passed - Render auto-deploys from github"
+
+
+      
+
+
