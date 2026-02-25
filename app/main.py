@@ -4,12 +4,16 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 import joblib
+from fastapi.templating import Jinja2Templates
+from fastapi.requests import Request
 
 app = FastAPI(
     title="StockSense API",
     description="ML-powered stock price direction predictor",
     version="1.0.0"
 )
+
+templates = Jinja2Templates(directory="app/templates")
 
 model = joblib.load("app/stock_model.pkl")
 
@@ -42,8 +46,8 @@ def get_features(ticker_symbol):
 
 @app.get("/")
 
-def home():
-    return {"message": "Welcome to StockSense API", "status": "running"}
+def home(request:Request):
+    return templates.TemplateResponse("index.html", {"request" : request})
 
 @app.post("/predict")
 
